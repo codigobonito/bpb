@@ -15,7 +15,7 @@ from .messages import (
     WELCOME,
     LINKS_IMPORTANTES,
 )
-from .utils import get_meeting_range, parse_date
+from .utils import get_meeting_range, parse_date, alarm
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -62,6 +62,7 @@ def get_meeting(update, context):
 def set_meeting(update, context):
 
     try:
+        chat_id = update.message.chat_id
 
         parsed_date, datetime_obj, next_meetings = get_meeting_range(context.args)
 
@@ -73,6 +74,11 @@ def set_meeting(update, context):
             MARCADA_PARA.format(parsed_date=parsed_date).lower().capitalize() + REPETIRA
         )
         message += " \n".join(i[0] for i in context.bot.next_meetings)
+
+        for meeting in next_meetings:
+            context.job_queue.run_once(
+                alarm, meeting[1], context=chat_id, name=meeting[0]
+            )
 
     except Exception as e:
 
@@ -90,8 +96,11 @@ def clear_meetings(update, context):
 
         delattr(context.bot, "next_meeting")
         delattr(context.bot, "next_meetings")
-        message = CLEAR + PLEASE_SCHEDULE
 
+        for job in context.job_queue.jobs():
+            job.schedule_removal()
+
+        message = CLEAR + PLEASE_SCHEDULE
     except AttributeError:
 
         message = SEM_REUNIAO
