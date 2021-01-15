@@ -6,6 +6,7 @@ from telegram.ext import CommandHandler, Filters, MessageHandler
 from .messages import (
     CLEAR,
     ERRO_AO_MARCAR,
+    LINKS_IMPORTANTES,
     MARCADA_PARA,
     PLEASE_SCHEDULE,
     REPETIRA,
@@ -13,9 +14,14 @@ from .messages import (
     SEM_VALOR,
     START,
     WELCOME,
-    LINKS_IMPORTANTES,
 )
-from .utils import get_meeting_range, parse_date, alarm
+from .utils import (
+    alarm,
+    generate_reminders,
+    get_meeting_range,
+    parse_date,
+    prettify_date,
+)
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -75,9 +81,11 @@ def set_meeting(update, context):
         )
         message += " \n".join(i[0] for i in context.bot.next_meetings)
 
-        for meeting in next_meetings:
+        alarm_times = generate_reminders(next_meetings)
+
+        for meeting in alarm_times:
             context.job_queue.run_once(
-                alarm, meeting[1], context=chat_id, name=meeting[0]
+                alarm, meeting, context=chat_id, name=prettify_date(meeting)
             )
 
     except Exception as e:
