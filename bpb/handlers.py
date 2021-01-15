@@ -33,7 +33,9 @@ locale.setlocale(locale.LC_TIME, "pt_BR.UTF-8")
 
 
 def start(update, context):
-
+    """
+    Handle sending the start message
+    """
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=START,
@@ -41,7 +43,9 @@ def start(update, context):
 
 
 def get_meeting(update, context):
-
+    """
+    Get current meetings set on context
+    """
     try:
         datetime_obj = getattr(context.bot, "next_meeting")
 
@@ -66,6 +70,9 @@ def get_meeting(update, context):
 
 
 def set_meeting(update, context):
+    """
+    Set meetings and alarms
+    """
 
     try:
         chat_id = update.message.chat_id
@@ -99,6 +106,9 @@ def set_meeting(update, context):
 
 
 def clear_meetings(update, context):
+    """
+    Clear meetings and alarms
+    """
 
     try:
 
@@ -117,6 +127,9 @@ def clear_meetings(update, context):
 
 
 def links(update, context):
+    """
+    Get important links
+    """
 
     context.bot.send_message(
         chat_id=update.effective_chat.id, text=LINKS_IMPORTANTES, parse_mode="Markdown"
@@ -124,6 +137,9 @@ def links(update, context):
 
 
 def welcome(update, context):
+    """
+    Welcome a new group member
+    """
 
     new_member = update.message.new_chat_members[0]
 
@@ -135,6 +151,9 @@ def welcome(update, context):
 
 
 def get_handlers():
+    """
+    Aggregate and return handlers
+    """
 
     handlers = [
         MessageHandler(Filters.status_update.new_chat_members, welcome),
