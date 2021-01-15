@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from dateutil import parser as dateutil_parser
 
+from .messages import LEMBRETE
+
 
 def prettify_date(dt_object):
 
@@ -47,4 +49,4 @@ def generate_reminders(next_meetings):
 def alarm(context):
 
     job = context.job
-    context.bot.send_message(job.context, text="Beep!")
+    context.bot.send_message(job.context, text=LEMBRETE)
