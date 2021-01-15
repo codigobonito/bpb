@@ -1,6 +1,17 @@
 PLEASE_SCHEDULE = " Por favor marque um horário com o comando /setmeeting."
 
-START = "Olá, sou o BPB!\n O bot de Boas práticas do Código Bonito."
+START = """
+Olá, sou o BPB! 
+O bot de Boas práticas do Código Bonito.
+
+Use algum dos meus comandos:
+
+/setmeeting - Marca as reuniões e configura os alarmes. 
+    Por exemplo: /setmeeting 15-01-2021 18h.
+/getmeeting - Retorna as reuniões marcadas
+/clear - Limpa a agenda de reuniões
+/links - Retorna links importantes do grupo
+"""
 
 WELCOME = (
     "Olá, {user_text}! Esse é o grupo do Código Bonito, "
